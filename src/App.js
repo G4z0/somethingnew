@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import Login from './Pages/LogIn';
+import Home from './Pages/Home';
+import Main from './Pages/Main';
 
-function App() {
+const AuthenticatedRedirect = () => {
+  const isAuthenticated = false; // Replace with your authentication check logic
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/Main');
+    } else {
+      navigate('/Home');
+    }
+  }, [isAuthenticated, navigate]);
+
+  return null; 
+};
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/main" element={<Main />} />
+        <Route path="/" element={<AuthenticatedRedirect />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;

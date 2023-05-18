@@ -1,0 +1,9 @@
+.previewContainer::-webkit-scrollbar {
+    display: none;
+  };
+
+.detailsAnimation{
+    transition: 'all 1s ease-out';
+    transform: 'translateY(50vh)';
+}
+  
