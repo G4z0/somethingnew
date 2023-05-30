@@ -28,7 +28,7 @@ const Login = () => {
             navigate('/login')
         } else {
             setIsLoggedIn(true);
-            navigate('/');
+            navigate('/main');
         }
     }, [navigate])
 
