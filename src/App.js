@@ -20,7 +20,7 @@ const AuthenticatedRedirect = () => {
 
   useEffect(() => {
     if (token) {
-      navigate('/main');
+      navigate('./home');
     } else {
       navigate('/login');
     }

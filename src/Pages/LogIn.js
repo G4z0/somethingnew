@@ -28,14 +28,14 @@ const Login = () => {
             navigate('/login')
         } else {
             setIsLoggedIn(true);
-            navigate('/main');
+            navigate('/');
         }
     }, [navigate])
 
     useEffect(() => {
         if (!isLoggedIn) {
             const uiConfig = {
-                signInSuccessUrl: './main',
+                signInSuccessUrl: './',
                 signInOptions: [
                     GoogleAuthProvider.PROVIDER_ID,
                     EmailAuthProvider.PROVIDER_ID,
