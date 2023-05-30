@@ -3,7 +3,48 @@
   };
 
 .detailsAnimation{
+    align-items: center;
+    justify-content: center;
     transition: 'all 1s ease-out';
     transform: 'translateY(50vh)';
+    width: 150%;
+    height: 150%;
 }
   
+iframe {
+  
+  align-items: center;
+  justify-content: center;
+  align-items: center;
+  max-width: 800px;
+  max-height: 800px;
+}
+.invisibleText {
+  opacity: 0;
+  transition: opacity 2s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fadeIn {
+  text-align: center;
+  animation-name: fadeIn;
+  animation-duration: 2s;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}

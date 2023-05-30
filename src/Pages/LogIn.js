@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getAuth, GoogleAuthProvider, EmailAuthProvider } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import * as firebaseui from 'firebaseui';
 import 'firebaseui/dist/firebaseui.css';
+import { useNavigate } from 'react-router-dom';
 
 const firebaseConfig = {
     apiKey: "AIzaSyB3KDYZqFp4GaG-jP-FV9ZTDnOucTHMLtw",
@@ -18,25 +19,78 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 const Login = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const navigate = useNavigate();
+
     useEffect(() => {
-        const uiConfig = {
-            signInSuccessUrl: 'http://localhost:3000/main',
-            signInOptions: [
-                GoogleAuthProvider.PROVIDER_ID,
-                EmailAuthProvider.PROVIDER_ID,
-            ],
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/login')
+        } else {
+            setIsLoggedIn(true);
+            navigate('/');
         }
+    }, [navigate])
 
-        const ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(auth);
-        ui.start('#firebaseui-auth-container', uiConfig);
-    }, []);
+    useEffect(() => {
+        if (!isLoggedIn) {
+            const uiConfig = {
+                signInSuccessUrl: './main',
+                signInOptions: [
+                    GoogleAuthProvider.PROVIDER_ID,
+                    EmailAuthProvider.PROVIDER_ID,
+                ],
+            };
 
+            setTimeout(() => {
+                const ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(auth);
+                ui.start('#firebaseui-auth-container', uiConfig);
+            }, 0);
+        }
+    }, [isLoggedIn]);
+
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+            if (user) {
+                user.getIdToken().then((token) => {
+                    localStorage.setItem('token', token);
+                    setTimeout(() => {
+                        auth.signOut().then(() => {
+                            localStorage.removeItem('token');
+                            navigate('/login');
+                        });
+                    }, 1000);
+                });
+                
+                const intervalId = setInterval(() => {
+                    user.getIdTokenResult(true)
+                        .then((idTokenResult) => {
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                            if (error.code === 'auth/user-not-found') {
+                                localStorage.removeItem('token');
+                                navigate('/login');
+                            }
+                        });
+                }, 1000); 
+
+                return () => clearInterval(intervalId);
+            } else {
+                localStorage.removeItem('token');
+            }
+        });
+
+        return unsubscribe;
+    }, [navigate]);
+    
+    
     return (
         <div style={styles.container}>
-        <div style={styles.LoginPage}>
-            <h1 style={styles.LoginPageLogin}>Login into the site</h1>
-            <div id="firebaseui-auth-container"></div>
-        </div>
+            <div style={styles.LoginPage}>
+                <h1 style={styles.LoginPageLogin}>Login into the site</h1>
+                <div id="firebaseui-auth-container"></div>
+            </div>
         </div>
     );
 };

@@ -23,7 +23,7 @@ const Home = () => {
             <Link to="/" style={styles.navLink}>
               Home
             </Link>
-            <Link to="/movies" style={styles.navLink}>
+            <Link to="/main" style={styles.navLink}>
               Movies
             </Link>
             <Link to="/tv-shows" style={styles.navLink}>
